@@ -1,0 +1,23 @@
+﻿{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "XenosEditorMenu",
+	"Description": "Creating an editor menu is pretty simple with this plugin. It also allows to add tabs dynamically to specified categories and custom Slate styles such as custom icons.",
+	"Category": "Xenos",
+	"CreatedBy": "Ignasi Pelayo",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"CanContainContent": false,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "XenosEditorMenu",
+			"Type": "Editor",
+			"LoadingPhase": "PostEngineInit"
+		}
+	]
+}
