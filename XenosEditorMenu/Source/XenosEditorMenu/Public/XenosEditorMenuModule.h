@@ -3,8 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ToolMenuDelegates.h"
-#include "Modules/ModuleManager.h"
+
+struct FXenosEditorMenuConfig;
+
+struct XENOSEDITORMENU_API FXenosEditorMenu
+{
+	FName MenuName;
+	
+	UToolMenu* Menu = nullptr;
+
+	TArray<TSharedPtr<FWorkspaceItem>> XenosEditorMenuCategories;
+
+	TSharedPtr<FWorkspaceItem> GetCategoryByDisplayName(const FString& CategoryName);
+};
 
 class XENOSEDITORMENU_API FXenosEditorMenuModule : public IModuleInterface
 {
@@ -15,10 +26,13 @@ public:
 
 	static FXenosEditorMenuModule& GetModule();
 
-	void RegisterCustomEditorMenu(const FNewToolMenuDelegateLegacy& MainSectionNewToolMenuDelegate,
-		const FName& EditorMenuName = "Xenos", const FName& EditorMenuTooltipName = "Xenos");
+	void RegisterXenosEditorMenu();
 
-	UToolMenu* GetMenu() const;
+	FXenosEditorMenu RegisterXenosEditorMenu(const FXenosEditorMenuConfig& XenosEditorMenuData) const;
+
+	TArray<TSharedPtr<FWorkspaceItem>> GetXenosEditorMenuTabStructure(const FXenosEditorMenuConfig& XenosEditorMenuConfig) const;
+
+	FXenosEditorMenu GetXenosEditorMenu(const FName& XenosEditorMenuName = NAME_None) const;
 
 	static FName GetStyleSetName();
 
@@ -32,7 +46,9 @@ protected:
 	void ReleaseStyleSet();
 	
 protected:
-	UToolMenu* CustomEditorMenu = nullptr;
+	FXenosEditorMenu XenosEditorMenu;
+
+	TArray<FXenosEditorMenu> AdditionalXenosEditorMenus = TArray<FXenosEditorMenu>();
 
 	TSharedPtr<FSlateStyleSet> CustomEditorMenuStyle = nullptr;
 };
