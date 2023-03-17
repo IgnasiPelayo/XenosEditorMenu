@@ -69,7 +69,7 @@ void FXenosEditorMenuModule::RegisterXenosEditorMenu()
 	}
 }
 
-FXenosEditorMenu FXenosEditorMenuModule::RegisterXenosEditorMenu(const FXenosEditorMenuConfig& XenosEditorMenuData) const
+FXenosEditorMenu FXenosEditorMenuModule::RegisterXenosEditorMenu(const FXenosEditorMenuConfig& XenosEditorMenuData)
 {
 	UToolMenu* MainMenu = UToolMenus::Get()->ExtendMenu("MainFrame.MainMenu");
 
@@ -101,19 +101,41 @@ FXenosEditorMenu FXenosEditorMenuModule::RegisterXenosEditorMenu(const FXenosEdi
 	return XenosMenu;
 }
 
-TArray<TSharedPtr<FWorkspaceItem>> FXenosEditorMenuModule::GetXenosEditorMenuTabStructure(const FXenosEditorMenuConfig& XenosEditorMenuConfig) const
+TArray<TSharedPtr<FWorkspaceItem>> FXenosEditorMenuModule::GetXenosEditorMenuTabStructure(const FXenosEditorMenuConfig& XenosEditorMenuConfig)
 {
 	TArray<TSharedPtr<FWorkspaceItem>> MenuStructure;
-	MenuStructure.Add(FWorkspaceItem::NewGroup(FText::FromString("Main" + XenosEditorMenuConfig.MenuName.ToString())));
+	MenuStructure.Add(FWorkspaceItem::NewGroup(FText::FromString("Main")));
 	
 	for (int i = 0; i < XenosEditorMenuConfig.Categories.Num(); ++i)
 	{
 		TSharedPtr<FWorkspaceItem> Category = MenuStructure[0]->AddGroup(FText::FromName(XenosEditorMenuConfig.Categories[i].CategoryName));
 		MenuStructure.Add(Category);
-		for (int j = 0; j < XenosEditorMenuConfig.Categories[i].SubcategoriesNames.Num(); ++j)
+		for (int j = 0; j < XenosEditorMenuConfig.Categories[i].Subcategories.Num(); ++j)
 		{
-			// TODO Ignasi: Add category icon support
-			MenuStructure.Add(Category->AddGroup(FText::FromName(XenosEditorMenuConfig.Categories[i].SubcategoriesNames[j])));
+			FSlateIcon SubcategoryIcon = FSlateIcon();
+
+			if (XenosEditorMenuConfig.Categories[i].Subcategories[j].bHasIcon)
+			{
+				const FName IconName = XenosEditorMenuConfig.Categories[i].Subcategories[j].IconName;
+
+				if (XenosEditorMenuConfig.Categories[i].Subcategories[j].bHasCustomIcon)
+				{
+					const FString IconFullPath = FPaths::ProjectDir() / XenosEditorMenuConfig.Categories[i].Subcategories[j].CustomIconPath;
+					const FString IconPath = FPaths::GetPath(IconFullPath);
+					const FString IconFilename = FPaths::GetBaseFilename(IconFullPath);
+
+					AddStyle(IconName, IconPath, IconFilename, XenosEditorMenuConfig.Categories[i].Subcategories[j].CustomIconDimensions);
+
+					SubcategoryIcon = FSlateIcon(GetStyleSetName(), IconName);
+				}
+				else
+				{
+					SubcategoryIcon = FSlateIcon(FAppStyle::GetAppStyleSetName(), IconName);
+				}
+			}
+			
+			MenuStructure.Add(Category->AddGroup(FText::FromName(XenosEditorMenuConfig.Categories[i].Subcategories[j].SubcategoryName),
+				SubcategoryIcon));
 		}
 	}
 

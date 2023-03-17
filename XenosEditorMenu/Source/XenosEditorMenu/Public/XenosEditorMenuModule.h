@@ -14,7 +14,7 @@ struct XENOSEDITORMENU_API FXenosEditorMenu
 
 	TArray<TSharedPtr<FWorkspaceItem>> XenosEditorMenuCategories;
 
-	TSharedPtr<FWorkspaceItem> GetCategoryByDisplayName(const FString& CategoryName);
+	TSharedPtr<FWorkspaceItem> GetCategoryByDisplayName(const FString& CategoryName = "Main");
 };
 
 class XENOSEDITORMENU_API FXenosEditorMenuModule : public IModuleInterface
@@ -28,9 +28,9 @@ public:
 
 	void RegisterXenosEditorMenu();
 
-	FXenosEditorMenu RegisterXenosEditorMenu(const FXenosEditorMenuConfig& XenosEditorMenuData) const;
+	FXenosEditorMenu RegisterXenosEditorMenu(const FXenosEditorMenuConfig& XenosEditorMenuData);
 
-	TArray<TSharedPtr<FWorkspaceItem>> GetXenosEditorMenuTabStructure(const FXenosEditorMenuConfig& XenosEditorMenuConfig) const;
+	TArray<TSharedPtr<FWorkspaceItem>> GetXenosEditorMenuTabStructure(const FXenosEditorMenuConfig& XenosEditorMenuConfig);
 
 	FXenosEditorMenu GetXenosEditorMenu(const FName& XenosEditorMenuName = NAME_None) const;
 
