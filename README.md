@@ -24,14 +24,20 @@ Creating an editor menu is pretty simple with this plugin. It also allows adding
 
 Let's add our first tab to one of our menus. 
 
-- To get started, we need to add a dependency to the XenosEditorMenu in any editor module in our project.
-- Then, in the StartupModule of that module, we have to register the nomad tab spawner. Here's one way to do it:
+- To get started, we need to add a dependency to the XenosEditorMenu in any editor module in your project.
+- Then, in the StartupModule of that editor module, we have to register the nomad tab spawner. Here's one way to do it:
+
+```c++
+#include "XenosEditorMenuModule.h"
+
+#include "Widgets/Docking/SDockTab.h"
+```
 
 ```c++
 FXenosEditorMenuModule XenosEditorMenuModule = FXenosEditorMenuModule::GetModule();
 
-const FName XenosEditorMenuName = NAME_None;
-const FString CategoryName = "Main";
+const FName XenosEditorMenuName = NAME_None;  // Name of the menu where you want to spawn the tab. NAME_None will spawn on the default (Xenos) menu
+const FString CategoryName = "Main";  // The spawn category. For now, "Main" is the default. We'll add additional categories and subcategories
 const TSharedPtr<FWorkspaceItem> MainSection = XenosEditorMenuModule.GetXenosEditorMenu(XenosEditorMenuName).GetCategoryByDisplayName(CategoryName);
 if (MainSection.IsValid())
 {
@@ -50,22 +56,27 @@ if (MainSection.IsValid())
 ```
 - Additionally, don't forget to unregister the nomad tab spawner in the ShutdownModule function:
 ```c++
-	FGlobalTabmanager::Get()->UnregisterNomadTabSpawner("ExampleTab");
+FGlobalTabmanager::Get()->UnregisterNomadTabSpawner("ExampleTab");
 ```
+![image](https://user-images.githubusercontent.com/91916939/227964235-96d8e6ad-30cb-4c65-a3b2-b0f15b27c096.png)
 
 ## Creating Custom Groups and Sections
 
 Let's take the default "Tools" menu as an example to explain this topic. The "Tools" structure has a main category (just like every Xenos editor menu), but it is divided into eight groups: PROGRAMMING, TOOLS, INSTRUMENTATION, SOURCE CONTROL, UNREAL INSIGHTS, DATA VALIDATION, WORLD PARTITION, and PYTHON. Additionally, some items have additional subcategories. Tools > INSTRUMENTATION > Debug is an example. Now let's create groups in our Xenos menu.
 
+![image](https://user-images.githubusercontent.com/91916939/227965495-ea3af8fb-22e4-422c-9edc-c4745a9082ab.png)
+
 - Go to Edit > Project Settings > Editor > Xenos Editor Menu and add a new category to your menu. Change the "Category Name" variable to something descriptive. For this tutorial, we will use "Tools" as the name of the category.
 
-> **NOTE:** Even if you restart the Unreal Engine, this category or group won't be visible as it doesn't hold any tab..
+> **NOTE:** Even if you restart the Unreal Engine, this category or group won't be visible as it doesn't hold any tab.
 
 - Change the "CategoryName" variable of the code snippet above to your new category's "Category Name," and compile again.
 
 ```c++
 const FString CategoryName = "Tools";
 ```
+
+![image](https://user-images.githubusercontent.com/91916939/227965758-854caff5-d97c-4d8e-8438-f449f97da2e4.png)
 
 We can also create subcategories and add icons.
 
@@ -75,6 +86,8 @@ We can also create subcategories and add icons.
 
 > Remember, we have to update the "CategoryName" value in our .cpp file to the current subcategory name to spawn the tab in that subcategory.
 
+![image](https://user-images.githubusercontent.com/91916939/227966120-27c95510-dec1-495c-a934-d80da55b281c.png)
+
 Now, let's add a custom icon. For this example, we will use the "Icon_Xenos_40x.png" file located at "XenosEditorMenu/Resources".
 
 - First, enable the "Has Custom Icon" option. Some additional options will appear.
@@ -83,6 +96,8 @@ Now, let's add a custom icon. For this example, we will use the "Icon_Xenos_40x.
 - Finally, in the "Custom Icon Dimensions" field, determine the dimensions in pixels of that icon. In this case, 40.
 
 > Recompile the project to see if the icon was successfully loaded. If a white box appears, something went wrong.
+
+![image](https://user-images.githubusercontent.com/91916939/227966249-a5593dcf-39c5-4f53-a1dc-6cbb6247471b.png)
 
 ## Adding custom icons to tab spawners via C++
 
@@ -97,6 +112,8 @@ XenosEditorMenuModule.AddStyle("XenosIcon", FPaths::ProjectDir() / "Plugins/Xeno
 
 [...]
     .SetGroup(MainSection.ToSharedRef())
-	.SetIcon(FSlateIcon(XenosEditorMenuModule.GetStyleSetName(), "XenosIcon"));
+    .SetIcon(FSlateIcon(XenosEditorMenuModule.GetStyleSetName(), "XenosIcon"));
 [...]
 ```
+
+![image](https://user-images.githubusercontent.com/91916939/227966329-5f6eff3d-a9a7-462b-bf49-91ae3d7bc5cb.png)
