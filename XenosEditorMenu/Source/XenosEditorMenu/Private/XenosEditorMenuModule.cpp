@@ -120,7 +120,7 @@ TArray<TSharedPtr<FWorkspaceItem>> FXenosEditorMenuModule::GetXenosEditorMenuTab
 
 				if (XenosEditorMenuConfig.Categories[i].Subcategories[j].bHasCustomIcon)
 				{
-					const FString IconFullPath = FPaths::ProjectDir() / XenosEditorMenuConfig.Categories[i].Subcategories[j].CustomIconPath;
+					const FString IconFullPath = FPaths::ProjectDir() / XenosEditorMenuConfig.Categories[i].Subcategories[j].CustomIconPath / IconName.ToString();
 					const FString IconPath = FPaths::GetPath(IconFullPath);
 					const FString IconFilename = FPaths::GetBaseFilename(IconFullPath);
 
